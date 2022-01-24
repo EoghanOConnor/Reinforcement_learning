@@ -62,6 +62,7 @@ def do_action(state, actions,episode):
     if action==0:
         if episode % SHOW_EVERY==0:
             print(f"Intensities are not changed, {intensities}")
+            print(" ")
             
         reward=get_split_diff(state,state)
         return state, reward
@@ -81,6 +82,7 @@ def do_action(state, actions,episode):
         if episode % SHOW_EVERY==0:
             print(f"{ind[action]} is increased, {ind[subaction]} is decreased")
             print(f"The intensities are {intensities}")
+            print(" ")
             
         reward=get_split_diff(state,new_state)
         return tuple(new_state), reward  
@@ -88,6 +90,9 @@ def do_action(state, actions,episode):
 #For loop
 state=tuple([34,33,33])
 for episode in range (EPISODES):
+    if episode % SHOW_EVERY==0:
+        print(f"Training week: {episode}")
+        
     action=np.argmax(q_table[state])
     new_state, reward=do_action(state, action,episode)
     if reward >0:
@@ -97,8 +102,6 @@ for episode in range (EPISODES):
         current_q = q_table[state +(action, )]
         new_q = (1-LEARNING_RATE) * current_q + LEARNING_RATE + (reward + DISCOUNT * max_future_q)
     q_table[state+(action, )] = new_q
-    
-    if episode % SHOW_EVERY==0:
-        print(f"Episode: {episode}")
         
     state=new_state
+
